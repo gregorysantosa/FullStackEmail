@@ -1,0 +1,66 @@
+
+
+/**
+ * Button to toggle visibility of the mailbox selection drawer
+ * should be visible and clickable. Requires a single element to
+ * have an aria-label attribute of "toggle drawer"
+ */
+ test('Toggle Drawer Clickable', async () => {
+  const mailbox = inbox;
+  await waitFor(() =>{
+    render(
+      <SharedContext.Provider value = {{mailbox}}><Home /></SharedContext.Provider>,
+    );
+  });
+  setNarrow();
+  setWide();
+  getClickable('toggle drawer');
+});
+
+/**
+ * Initially the drawer is not shown, hence the Inbox and Trash
+ * buttons are invisible. After clicking the toggle button, both
+ * become visible. Requires a single element to have an
+ * aria-label attribute of "toggle drawer".
+ */
+ test('Open then close Drawer', async () => {
+  const mailbox = inbox;
+  await waitFor(() =>{
+    render(
+      <SharedContext.Provider value = {{mailbox}}><Home /></SharedContext.Provider>,
+    );
+  });
+  getOnlyVisible('Inbox');
+  getNotVisible('Trash');
+  fireEvent.click(getClickable('toggle drawer'));
+  getAnyVisible('Inbox');
+  getOnlyVisible('Trash');
+});
+
+ test('Open Drawer and click inbox, sent, trash, starred', async () => {
+  const mailbox = inbox;
+  await waitFor(() =>{
+    render(
+      <SharedContext.Provider value = {{mailbox}}><Home /></SharedContext.Provider>,
+    );
+  });
+  getOnlyVisible('Inbox');
+  getNotVisible('Trash');
+  fireEvent.click(getClickable('toggle drawer'));
+  fireEvent.click(getClickable('trashButton'));
+  fireEvent.click(getClickable('sentButton'));
+  fireEvent.click(getClickable('starredButton'));
+  fireEvent.click(getClickable('inboxButton'));
+  getAnyVisible('Inbox');
+  getOnlyVisible('Trash');
+});
+
+test('Click mail', async () => {
+  const mailbox = inbox;
+  await waitFor(() =>{
+    render(
+      <SharedContext.Provider value = {{mailbox}}><Home /></SharedContext.Provider>,
+    );
+  });
+  fireEvent.click(getOnlyVisible('Dwayne'));
+});
